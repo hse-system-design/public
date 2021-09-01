@@ -3,5 +3,5 @@
 В созданном окружении загружаем данные для лекции:
 
 ```bash
-curl https://raw.githubusercontent.com/ADKosm/dataculture-minor-2021/master/docker/init-env.sh | bash
+curl https://raw.githubusercontent.com/ADKosm/system-design-2021-public/main/docker-1/init-env.sh | bash
 ```
