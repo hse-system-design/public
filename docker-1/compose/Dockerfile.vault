@@ -1,0 +1,8 @@
+FROM python:3.7
+
+RUN pip install Flask cryptography
+
+COPY vault.py /app/server.py
+
+WORKDIR /app
+ENTRYPOINT ["python3", "server.py"]
