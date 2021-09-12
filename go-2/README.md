@@ -29,8 +29,6 @@ echo "export GOPATH=~/go" >> ~/.profile # (или .bash_profile)
 * Pointers
 * Interfaces
 * Tests
-* Goroutines
-* Defer, recover
 * Reflection/tags
 
 ### Learn by reading 

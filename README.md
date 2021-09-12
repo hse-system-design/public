@@ -1,2 +1,9 @@
-# system-design-2021-public
-System Design course at HSE (2021)
+# System Design course at HSE (2021)
+
+<a href="http://wiki.cs.hse.ru/%D0%94%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD_%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC_21/22">Wiki-страница курса</a>
+
+Структура репозитория:
+
+* slides - директория с презентациями с занятий
+* tasks - материалы для выполнения мини-заданий
+* something-number - директории с остальными материалами по определенной теме
