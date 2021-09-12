@@ -10,22 +10,29 @@ import (
 func TestCollection_AddAndGet(t *testing.T) {
 	collection := NewCollection()
 
-	collection.Add(NewItem(2, 4))
-	collection.Add(NewItem(5, 9))
+	err := collection.Add(NewItem(2, 4))
+	require.NoError(t, err)
+	err = collection.Add(NewItem(5, 9))
+	require.NoError(t, err)
 
 	t.Run("existing keys", func(t *testing.T) {
-		item1, err := collection.At(2)
-		require.NoError(t, err)
+		item1, ok := collection.At(2)
+		require.True(t, ok)
 		require.Equal(t, 4, item1.Value())
 
-		item2, err := collection.At(5)
-		require.NoError(t, err)
+		item2, ok := collection.At(5)
+		require.True(t, ok)
 		require.Equal(t, 9, item2.Value())
 	})
 
+	t.Run("add existing key", func(t *testing.T) {
+		err := collection.Add(NewItem(2, 4))
+		require.ErrorIs(t, err, ErrDuplicateKey)
+	})
+
 	t.Run("non-existing keys", func(t *testing.T) {
-		_, err := collection.At(12)
-		require.Error(t, err)
+		_, ok := collection.At(12)
+		require.False(t, ok)
 	})
 }
 
@@ -33,8 +40,8 @@ func TestCollection_Empty(t *testing.T) {
 	collection := NewCollection()
 
 	t.Run("at", func(t *testing.T) {
-		_, err := collection.At(1)
-		require.Error(t, err)
+		_, ok := collection.At(1)
+		require.False(t, ok)
 	})
 
 	t.Run("iter by insert", func(t *testing.T) {
@@ -57,7 +64,8 @@ func TestCollection_IterateByInsertion(t *testing.T) {
 	collection := NewCollection()
 
 	for _, key := range keys {
-		collection.Add(NewItem(key, rand.Int()))
+		err := collection.Add(NewItem(key, rand.Int()))
+		require.NoError(t, err)
 	}
 
 	iter := collection.IterateBy(ByInsertion)
@@ -76,7 +84,7 @@ func TestCollection_IterateByInsertion(t *testing.T) {
 
 	t.Run("error on empty iterator", func(t *testing.T) {
 		_, err := iter.Next()
-		require.Error(t, err)
+		require.ErrorIs(t, err, ErrEmptyIterator)
 	})
 }
 
@@ -89,7 +97,8 @@ func TestCollection_IterateByKeys(t *testing.T) {
 	collection := NewCollection()
 
 	for _, key := range keys {
-		collection.Add(NewItem(key, rand.Int()))
+		err := collection.Add(NewItem(key, rand.Int()))
+		require.NoError(t, err)
 	}
 
 	iter := collection.IterateBy(ByKey)
@@ -112,7 +121,7 @@ func TestCollection_IterateByKeys(t *testing.T) {
 
 	t.Run("error on empty iterator", func(t *testing.T) {
 		_, err := iter.Next()
-		require.Error(t, err)
+		require.ErrorIs(t, err, ErrEmptyIterator)
 	})
 }
 
