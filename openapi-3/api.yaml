@@ -1,0 +1,52 @@
+openapi: 3.0.3
+info:
+  title: URL Shortener
+  description: URL Shortener
+  version: 1.0.0
+paths:
+  /api/urls:
+    post:
+      summary: Создать новую короткую ссылку для заданного адреса.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url]
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  nullable: false
+      responses:
+        200:
+          description: Короткая ссылка успешно создана
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [key]
+                properties:
+                  key:
+                    type: string
+                    description: Ключ, по которому можно получить редирект на заданный URL.
+                    pattern: '\w{5,10}'
+                    nullable: false
+  /{key}:
+    get:
+      parameters:
+        - in: path
+          name: key
+          description: Ключ, который был получен при создании короткой ссылки по запросу `POST /api/urls`
+          schema:
+            type: string
+            pattern: '\w{5,10}'
+      responses:
+        308:
+          description: Короткая ссылка создана, всё отлично.
+          headers:
+            Location:
+              required: true
+              description: Адрес перенаправления, указанный при создании короткой ссылки.
+        404:
+          description: Данный ключ не является короткой ссылкой.
