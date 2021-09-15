@@ -54,6 +54,11 @@ paths:
             Идентификатор ползователя, который аутентифицирован в данном запросе.
           schema:
             $ref: '#/components/schemas/UserId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
       responses:
         200:
           description: Пост был успешно создан. Тело ответа содержит созданный пост.
