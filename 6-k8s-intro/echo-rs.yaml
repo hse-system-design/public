@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: echo-service
+  labels:
+    service-name: echo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service-name: echo
+  template:
+    metadata:
+      labels:
+        service-name: echo
+    spec:
+      containers:
+        - name: echo-server
+          image: ealen/echo-server
+          ports:
+            - containerPort: 80
