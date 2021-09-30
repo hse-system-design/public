@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-service-deployment
+  labels:
+    service-name: echo
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      service-name: echo
+  template:
+    metadata:
+      labels:
+        service-name: echo
+        version: v2.0.0
+    spec:
+      containers:
+        - name: echo-server
+          image: ealen/echo-server
+          ports:
+            - containerPort: 80

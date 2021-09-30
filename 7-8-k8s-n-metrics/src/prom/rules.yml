@@ -1,0 +1,11 @@
+groups:
+  - name: App Server Health
+    rules:
+      - alert: unable to gather metrics
+        expr: scrape_samples_scraped{instance=~"app.*"} == 0
+        for: 1m
+        labels:
+          severity: page
+        annotations:
+          summary: "{{ $labels.instance }} has not provided metrics in 1m"
+          description: "{{ $labels.instance }} may be offline as prom has been unable to gather metrics from it in over 1m"
