@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  message-broker:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbit_data:/var/lib/rabbitmq
+      - rabbit_log_data:/var/log/rabbitmq
+    restart: always
+
+  sender:
+    build:
+      context: .
+      dockerfile: Dockerfile.producer
+    environment:
+      AMQP_SERVER_URL: amqp://guest:guest@message-broker:5672/
+      WAIT: 1000
+    restart: always
+
+  consumer1:
+    build:
+      context: .
+      dockerfile: Dockerfile.consumer
+    environment:
+      AMQP_SERVER_URL: amqp://guest:guest@message-broker:5672/
+      ID: 1
+    restart: always
+
+  consumer2:
+    build:
+      context: .
+      dockerfile: Dockerfile.consumer
+    environment:
+      AMQP_SERVER_URL: amqp://guest:guest@message-broker:5672/
+      ID: 2
+    restart: always
+
+volumes:
+  rabbit_log_data: {}
+  rabbit_data: {}
