@@ -1,0 +1,29 @@
+version: '3.6'
+services:
+  telegraf:
+    image: telegraf
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    ports:
+      - '8186:8186'
+
+  influxdb:
+    image: influxdb:latest
+    ports:
+      - '8086:8086'
+
+  influxdb_cli:
+    links:
+      - influxdb
+    image: quay.io/influxdb/influxdb:v2.0.4
+    entrypoint: influx setup --bucket mybucket -t mytoken -o myorg --username=username --password=password --host=http://influxdb:8086 -r 1h -f
+    depends_on:
+      - influxdb
+
+  grafana:
+    image: grafana/grafana:8.0.2
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/config.ini:/etc/grafana/config.ini

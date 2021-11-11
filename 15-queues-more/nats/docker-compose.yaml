@@ -1,0 +1,22 @@
+version: "2"
+
+services:
+  nats:
+    image: 'nats:0.8.0'
+    entrypoint: "/gnatsd -DV"
+    ports:
+      - "8222:8222"
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    environment:
+      - "NATS_URI=nats://nats:4222"
+    ports:
+      - "8080:8080"
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    environment:
+      - "NATS_URI=nats://nats:4222"

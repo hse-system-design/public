@@ -1,0 +1,16 @@
+apiVersion: 1
+
+# tells grafana where to find the prom connection
+datasources:
+  - name: influxdb-flux
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    user: username
+    secureJsonData:
+      token: mytoken
+      password: password
+    jsonData:
+      version: Flux
+      organization: myorg
+      defaultBucket: mybucket

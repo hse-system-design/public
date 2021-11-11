@@ -1,0 +1,11 @@
+version: "2"
+
+services:
+  biba:
+    build:
+      context: .
+      dockerfile: Dockerfile.biba
+  kuka:
+    build:
+      context: .
+      dockerfile: Dockerfile.kuka

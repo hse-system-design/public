@@ -1,0 +1,33 @@
+
+<html>
+<head>
+    <title>SSE demo</title>
+</head>
+<body>
+
+<div id="container"></div>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        if (window.EventSource === undefined) {
+            $("#container").append("Your browser does not support EventSource");
+            return;
+        } else {
+            console.log("Init sse")
+            initSSE();
+        }
+
+        function initSSE() {
+            var socket = new EventSource("http://localhost:8080/sse"),
+                container = $("#container")
+            socket.onmessage = function (e) {
+                container.append("<p> Got msg:" + e.data + "</p>");
+            }
+
+            return socket;
+        }
+    });
+</script>
+</body>
+</html>
