@@ -1,0 +1,23 @@
+version: "3"
+services:
+  consumer1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: "host"
+    environment:
+      NAME: "consumer-1"
+  consumer2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: "host"
+    environment:
+      NAME: "consumer-2"
+  consumer3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: "host"
+    environment:
+      NAME: "consumer-3"

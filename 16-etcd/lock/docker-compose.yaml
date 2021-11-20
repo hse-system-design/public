@@ -1,0 +1,26 @@
+version: "3"
+services:
+  lock1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: "host"
+    environment:
+      NAME: "Locker-1"
+      GC_WAIT: 1
+  lock2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: "host"
+    environment:
+      NAME: "Locker-2"
+      GC_WAIT: 2
+  lock3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: "host"
+    environment:
+      NAME: "Locker-3"
+      GC_WAIT: 3
