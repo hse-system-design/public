@@ -1,0 +1,144 @@
+openapi: 3.0.3
+info:
+  title: Microblog API
+  description: Microblog API
+  version: 1.0.0
+components:
+  schemas:
+    PostId:
+      description: Уникальный идентификатор поста в формате Base64URL.
+      type: string
+      pattern: '[A-Za-z0-9_\-]+'
+    UserId:
+      description: Уникальный идентификатор пользователя
+      type: string
+      pattern: '[0-9a-f]+'
+    ISOTimestamp:
+      description: Момент времени в формате ISO 8601 в часовом поясе UTC+0.
+      type: string
+      pattern: '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,3})?Z'
+    Post:
+      type: object
+      nullable: false
+      properties:
+        id:
+          allOf:
+            - $ref: '#/components/schemas/PostId'
+            - nullable: false
+            - readOnly: true
+        text:
+          type: string
+          nullable: false
+        authorId:
+          allOf:
+            - $ref: '#/components/schemas/UserId'
+            - nullable: false
+            - readOnly: true
+        createdAt:
+          allOf:
+            - $ref: '#/components/schemas/ISOTimestamp'
+            - nullable: false
+            - readOnly: true
+    PageToken:
+      type: string
+      pattern: '[A-Za-z0-9_\-]+'
+paths:
+  '/api/v1/posts':
+    post:
+      summary: Публикация поста
+      parameters:
+        - in: header
+          name: System-Design-User-Id
+          required: true
+          description: >
+            Идентификатор ползователя, который аутентифицирован в данном запросе.
+          schema:
+            $ref: '#/components/schemas/UserId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        200:
+          description: Пост был успешно создан. Тело ответа содержит созданный пост.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        401:
+          description: >
+            Токен пользователя отсутствует в запросе, или передан в неверном формате, или его срок действия истёк.
+  '/api/v1/posts/{postId}':
+    get:
+      summary: Получение поста по идентификатору
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            $ref: '#/components/schemas/PostId'
+      responses:
+        200:
+          description: Пост найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        404:
+          description: Поста с указанным идентификатором не существует
+  '/api/v1/users/{userId}/posts':
+    get:
+      summary: Получение страницы последних постов пользователя
+      description: >
+        Получение страницы с постами пользователя.
+
+        Для получения первой страницы (с самыми последними постами), необходимо выполнить запрос
+        без параметра `page`.
+        Для получения следующей странцы, необходимо в параметр `page` передать токен следующей страницы,
+        полученный в теле ответа с предыдущей страницей.
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UserId'
+        - in: query
+          name: page
+          description: Токен страницы
+          required: false
+          schema:
+            $ref: '#/components/schemas/PageToken'
+        - in: query
+          name: size
+          description: Количество постов на странице
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        200:
+          description: Страница с постами.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  posts:
+                    type: array
+                    description: >
+                      Посты в обратном хронологическом порядке.
+                      Отсутствие данного поля эквивалентно пустому массиву.
+                    items:
+                      $ref: '#/components/schemas/Post'
+                  nextPage:
+                    allOf:
+                      - $ref: '#/components/schemas/PageToken'
+                      - nullable: false
+                      - description: >
+                          Токен следующей страницы при её наличии.
+                          Поле отсутствует, если текущая страница содержит самый ранний пост пользователя.
+        400:
+          description: Некорректный запрос, например, из-за некорректного токена страницы.
