@@ -8,6 +8,7 @@
 * [Telegram-канал с анонсами](https://t.me/+qKTB_0W2N4swNmEy)
 * [Telegram-чат с преподавателями](https://t.me/+cH3c1m--rxY0ZWIy)
 * [Ссылка на Zoom](https://us06web.zoom.us/j/88575619011?pwd=c3doQml3bWUzRXRPNW93eDFhZ2xoUT09) -- занятия проходят по средам с 18:10 МСК
+* [Ведомость с оценками](https://docs.google.com/spreadsheets/d/1-qqi7KYG-0pjWgNicBqh-J6EsJeGCffzDsII-_DNTNY?usp=sharing)
 
 # Формула оценивания
 
